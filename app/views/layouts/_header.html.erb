@@ -6,6 +6,14 @@
         <li><%= link_to icon_for('icon-plus', t(".create_survey")), surveys_path, :method => :post, :class => "add" %></li>
       <% end %>
 
+      <% if Organization.can? :manage, controller.access_token %>
+        <li><%= link_to t("header.organizations"), root_path, :class=>'organization'  %></li>
+      <% end %>
+      <% if User.can? :manage, controller.access_token %>
+        <li><%= link_to t("header.list_users"), root_path, :class => 'users' %></li>
+        <li><%= link_to t("header.create_a_user"), root_path, :class => 'add' %></li>
+      <% end %>
+
       <li><%= link_to t("header.logout"), logout_path, :class => 'logout' %></li>
       <li><%= t("header.logged_in_as", :username => current_username) %></li>
       <% unless Rails.env.production? %>

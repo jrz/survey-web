@@ -15,6 +15,11 @@ class User
     users
   end
 
+  def self.can?(action, client)
+    return false unless client
+    client.get("/api/ability?perform_action=#{action.to_sym}&resource=User").parsed['result']
+  end
+
   def self.json_to_user(user_json)
     User.new(user_json['id'], user_json['name'], user_json['role'])
   end

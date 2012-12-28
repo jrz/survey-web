@@ -24,4 +24,9 @@ class Organization
   def self.field_agents(client, organization_id)
     users(client, organization_id).select { |user| user.role == 'field_agent' }
   end
+
+  def self.can?(action, client)
+    return false unless client
+    client.get("/api/ability?perform_action=#{action.to_sym}&resource=Organization").parsed['result']
+  end
 end
