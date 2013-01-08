@@ -10,26 +10,27 @@ body#build div#content{
       position: absolute;
 
       position: absolute;
-      right: -90%;
-      width: 80%;
+      right: -92%;
+      width: 88%;
       @include transition(all 1.0s ease-in-out);
 
-      padding: 20px;
+      padding: 1%;
       margin: 0;
       list-style: none;
       font-size: 16px;
       line-height: 24px;
 
       li{
-        width: 30%;
+        width: 18%;
         padding: 0;
-        margin: 1.5%;
+        margin: 1%;
         list-style: none;
         display: block;
         float: left;
         text-align: center;
 
         a{
+          font-size: 13px;
           display: block;
           padding: 0;
           background: $secondary-color;
@@ -44,9 +45,9 @@ body#build div#content{
     div#settings_pane{
       display: block;
       position: absolute;
-      right: -90%;
-      width: 80%;
-      padding: 20px;
+      right: -92%;
+      width: 86%;
+      padding: 2%;
       margin: 0;
       background: $secondary-color-light;
       @include transition(all 1.0s ease-in-out);
@@ -63,6 +64,8 @@ body#build div#content{
         margin-left: -20px;
         left: 0;
       }
+
+      textarea{height: 30px;}
     }
 
     div{margin-bottom: 6px;}
@@ -75,9 +78,56 @@ body#build div#content{
   }
 
   div#dummy_pane{
+    img{display: block;}
+
+    label{
+      abbr{border: none; color: $danger;}
+    }
+
     div#dummy_survey_details{
       display: block;
     }
+
+    div.dummy_question, .dummy_category{
+      border: solid 1px $secondary-color-light;
+      position: relative;
+
+      .inline_errors{
+        display: block;
+        background: $white;
+        color: $danger;
+        padding: 0 6px;
+        line-height: 21px;
+      }
+
+      .sub_question_group{
+        margin: 2px 0 0 0;
+
+        .sub_question_group_message{
+          margin: 0 0 0 20px;
+          padding: 10px;
+          background: $secondary-color-light;
+        }
+      }
+
+      div.collapse_category{
+        display: block; float: left;
+        margin: -8px 0 10px -28px;
+        color: $gray-xdark;
+      }
+
+      div.dummy_question, .sub_question_group_message, .dummy_category{
+        margin: 0 0 0 20px;
+        border-right: 0;
+        border-bottom: 0;
+
+        .dummy_question_content{margin: 0;}
+      }
+
+      .dummy_category_content{margin: 0; padding-top: 8px;}
+      .sub_question_group_message{margin-bottom: 2px;}
+    }
+
 
     div.dummy_question_content, div.dummy_category_content, div#dummy_survey_details>div{
       padding: 4px 10px 10px 30px;
@@ -104,6 +154,20 @@ body#build div#content{
 
 
   }
+
+  .form-actions{
+    border-top: solid 2px $secondary-color-light; padding-top: 10px;
+    input[type="submit"], input[type="button"]{float: right;}
+  }
+}
+
+#spinner{
+  display: block;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
 }
 
 #loading_overlay {

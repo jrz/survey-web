@@ -96,3 +96,16 @@ Contributing
 - We use [Pivotal Tracker](https://www.pivotaltracker.com/projects/602833) to manage our projects.
 You can have a look at the bugs and features that you could work on.
 - If you need any help, mail us at `survey@c42.in`.
+
+
+Other Notes
+========
+
+Setup `delayed_job` to Upload Photos to Amazon S3
+----------------
+
+- If delayed_job workers aren't running, photos will stay on the app server, and will not be migrated to S3.
+- [Setup](https://github.com/jnicklas/carrierwave#using-amazon-s3) `Carrierwave` with your Amazon S3 credentials.
+- Start `delayed_job` workers using `script/delayed_job`. Look [here](https://github.com/collectiveidea/delayed_job#running-jobs) for documentation.
+- If you're deploying to EngineYard, a deploy hook is provided in `deploy/after_restart.rb`.
+
