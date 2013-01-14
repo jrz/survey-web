@@ -5,14 +5,13 @@ class Answer < ActiveRecord::Base
 
   belongs_to :question
   belongs_to :response
-  attr_accessible :content, :question_id, :option_ids, :updated_at
+  attr_accessible :content, :question_id, :option_ids, :updated_at, :photo, :photo_cache
   validate :mandatory_questions_should_be_answered, :if => :response_validating?
   validate :content_should_not_exceed_max_length
   validate :content_should_be_in_range
   validates_uniqueness_of :question_id, :scope => [:response_id]
   has_many :choices, :dependent => :destroy
   validate :date_should_be_valid
-  attr_accessible :photo
   #has_attached_file :photo, :styles => { :medium => "300x300>", :thumb => "100x100>"}
   #validates_attachment_content_type :photo, :content_type=>['image/jpeg', 'image/png']
   mount_uploader :photo, ImageUploader

@@ -5,6 +5,7 @@ class ResponsesController < ApplicationController
   before_filter :survey_finalized
   before_filter :authorize_public_response, :only => :create
   before_filter :survey_not_expired, :only => :create
+  before_filter :read_cached_image, :only => [:complete, :update]
 
   def index
     respond_to do |format|
@@ -71,6 +72,20 @@ class ResponsesController < ApplicationController
   end
 
   private
+
+  def read_cached_image
+    answers_attributes = params[:response] && params[:response][:answers_attributes] || []
+    if answers_attributes
+      cache_dir = ImageUploader.cache_dir
+      answers_attributes.each do |_,answer|
+        if answer['photo_cache'].present?
+          photo = File.new("#{Rails.root}/public/#{cache_dir}/#{answer[:photo_cache]}")
+          answer['photo'] = photo
+          answer['photo_cache'] = ""
+        end
+      end
+    end
+  end
 
   def sort_questions_by_order_number(response)
     question_ids_in_order = response.survey.question_ids_in_order
