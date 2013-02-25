@@ -6,8 +6,8 @@ describe ImageUploader do
   before do
     ImageUploader.enable_processing = true
     ImageUploader.storage = :file
-    @question = FactoryGirl.create :question
-    @uploader = ImageUploader.new(@question, :image)
+    @photo = FactoryGirl.create :photo
+    @uploader = ImageUploader.new(@photo, :image)
     file =  File.open "#{Rails.root}/spec/fixtures/images/sample.jpg"
     @uploader.store!(file)
   end

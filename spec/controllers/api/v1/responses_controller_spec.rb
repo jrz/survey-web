@@ -184,6 +184,8 @@ module Api::V1
             resp = FactoryGirl.create(:response, :survey_id => survey.id)
             answer = FactoryGirl.create(:answer, :response_id => resp.id, :question_id => question.id, :photo => photo)
             resp_attrs = FactoryGirl.attributes_for(:response, :id => resp.id, :survey_id => survey.id, :answers_attributes =>  { '0' => {'id' => answer.id, 'question_id' => question.id, 'photo' => base64_image, 'updated_at' => 5.days.ago.to_i }})
+            answer.photo.should_receive(:filename).and_return("/spec/foo")
+            answer.photo.should_receive(:filename).and_return("/spec/foo")
             old_filename = answer.photo.filename
             put :update, :id => resp.id, :response => resp_attrs, :user_id => 15, :organization_id => 42
             answer.reload.photo.filename.should == old_filename
