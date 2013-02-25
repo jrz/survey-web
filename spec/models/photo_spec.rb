@@ -3,6 +3,15 @@ require 'spec_helper'
 describe Photo do
   it { should belong_to(:answer) }
 
+  before do
+    ImageUploader.enable_processing = true
+    ImageUploader.storage = :file
+  end
+
+  after do
+    ImageUploader.enable_processing = false
+  end
+
   context "when getting the URL" do
     it "returns the relative URL to the cached (local) image if the S3 version hasn't uploaded" do
       photo = FactoryGirl.create :photo
