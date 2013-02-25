@@ -9,7 +9,8 @@ class Photo < ActiveRecord::Base
   end
 
   def in_base64
-    file = File.read("#{image.root}/#{image.cache_dir}/#{tmp}") if image_tmp
+    file = File.read("#{image.root}/#{image.cache_dir}/#{image_tmp}") if image_tmp
+    file = image.thumb.file.read if image.thumb.file.try(:exists?)
     return Base64.encode64(file) if file
   end
 end

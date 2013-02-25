@@ -39,7 +39,7 @@ describe Photo do
     end
   end
 
-  pending "when encoding in base64" do
+  context "when encoding in base64" do
     it "returns the cached image if the remote image is still uploading" do
       photo = FactoryGirl.create :photo
       photo.image.stub(:root).and_return(Rails.root)
@@ -50,7 +50,7 @@ describe Photo do
     end
 
     it "returns the remote image if it's done uploading" do
-      photo = FactoryGirl.create :photo
+      photo = FactoryGirl.create :photo_with_image
       photo.in_base64.should == Base64.encode64(File.read(photo.image.thumb.path))
     end
   end
