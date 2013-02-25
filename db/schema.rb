@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130225070018) do
+ActiveRecord::Schema.define(:version => 20130225082951) do
 
   create_table "answers", :force => true do |t|
     t.text     "content"
@@ -87,10 +87,10 @@ ActiveRecord::Schema.define(:version => 20130225070018) do
   create_table "photos", :force => true do |t|
     t.integer  "answer_id"
     t.string   "image"
-    t.datetime "created_at",   :null => false
-    t.datetime "updated_at",   :null => false
-    t.string   "tmp"
-    t.string   "secure_token"
+    t.datetime "created_at",         :null => false
+    t.datetime "updated_at",         :null => false
+    t.string   "image_tmp"
+    t.string   "image_secure_token"
   end
 
   create_table "questions", :force => true do |t|

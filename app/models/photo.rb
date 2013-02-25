@@ -3,8 +3,13 @@ class Photo < ActiveRecord::Base
   mount_uploader :image, ImageUploader
 
   def url(opts={})
-    return  "/#{image.cache_dir}/#{tmp}" if tmp 
+    return  "/#{image.cache_dir}/#{image_tmp}" if image_tmp 
     return image.url(opts[:format]) if image.file
     return ""
+  end
+
+  def in_base64
+    file = File.read("#{image.root}/#{image.cache_dir}/#{tmp}") if image_tmp
+    return Base64.encode64(file) if file
   end
 end

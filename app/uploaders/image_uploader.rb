@@ -60,10 +60,10 @@ class ImageUploader < CarrierWave::Uploader::Base
 
   protected
   def secure_token(length=16)
-    unless model.photo_secure_token
-      model.photo_secure_token = SecureRandom.hex(length / 2)
+    unless model.image_secure_token
+      model.image_secure_token = SecureRandom.hex(length / 2)
       model.save
     end
-    model.photo_secure_token
+    model.image_secure_token
   end
 end
