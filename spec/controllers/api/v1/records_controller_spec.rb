@@ -1,24 +1,36 @@
 require 'spec_helper'
 
 describe Api::V1::RecordsController do
+  let(:survey) { FactoryGirl.create(:survey, :organization_id => 1) }
+  let(:category) { FactoryGirl.create(:category, :survey => survey) }
+
+  before(:each) { sign_in_as('cso_admin') }
+
   context "POST 'create'" do
     it "creates a record" do
-      record_attrs = FactoryGirl.attributes_for(:record)
+      record_attrs = FactoryGirl.attributes_for(:record, :category_id => category.id)
       expect {
         post :create, :record => record_attrs
       }.to change { Record.count }.by 1
     end
 
     it "returns the newly created record as json" do
-      record_attrs = FactoryGirl.attributes_for(:record)
+      record_attrs = FactoryGirl.attributes_for(:record, :category_id => category.id)
       post :create, :record => record_attrs
       response.should be_ok
       JSON.parse(response.body).except('created_at', 'updated_at').should == Record.last.as_json.except('created_at', 'updated_at')
     end
 
-    it "returns an error code if the creation is not successful" do
-      record_attrs = FactoryGirl.attributes_for(:record, :category_id => nil)
-      post :create, :record => record_attrs
+    it "returns an error if the creation is not successful" do
+      record_attrs = FactoryGirl.attributes_for(:record, :category_id => category.id, :survey_id => 42)
+      expect { post :create, :record => record_attrs }.to raise_error
+    end
+
+    it "returns an error code if the current user doesn't have access to create a record" do
+      survey = FactoryGirl.create(:survey, :organization_id => 50)
+      mr_category = MultiRecordCategory.create(:content => "MR", :survey_id => survey.id)
+      record_attrs = FactoryGirl.attributes_for(:record, :category_id => mr_category.id)
+      expect { post :create, :record => record_attrs }.not_to change { Record.count }
       response.should_not be_ok
     end
   end

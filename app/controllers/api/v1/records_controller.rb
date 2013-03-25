@@ -4,8 +4,9 @@ module Api
       respond_to :json
 
       def create
+        category = Category.find(params[:record][:category_id])
+        authorize! :create, Response.new(:survey => category.survey)
         record = Record.create(params[:record])
-        # TODO: Authorize!
         if record.valid?
           render :json => record
         else
