@@ -4,6 +4,7 @@ class SurveysController < ApplicationController
   load_and_authorize_resource
 
   before_filter :require_draft_survey, :only => [:build]
+  caches_action [:report], :if => :survey_finalized?
   before_filter :no_archived_surveys
 
   def index
@@ -82,5 +83,10 @@ class SurveysController < ApplicationController
       flash[:error] = t "flash.no_finalized_surveys"
       redirect_to root_path
     end
+  end
+
+  def survey_finalized?
+    survey = Survey.find_by_id(params[:id])
+    survey.finalized?
   end
 end

@@ -2,10 +2,12 @@ module Api
   module V1
     class OptionsController < APIApplicationController
       before_filter :dont_cache
+      caches_action :index
 
       def create
         option = Option.new(params[:option])
         authorize! :update, option.try(:survey)
+        expire_action :action => :show
         if option.save
           render :json => option
         else
@@ -16,6 +18,7 @@ module Api
       def update
         option = Option.find(params[:id])
         authorize! :update, option.try(:survey)
+        expire_action :action => :show
         if option.update_attributes(params[:option])
           render :json => option
         else
@@ -26,6 +29,7 @@ module Api
       def destroy
         option = Option.find_by_id(params[:id])
         authorize! :update, option.try(:survey)
+        expire_action :action => :show
         begin
           Option.destroy(params[:id])
           render :nothing => true
