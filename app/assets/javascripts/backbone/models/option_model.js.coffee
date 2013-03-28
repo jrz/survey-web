@@ -81,8 +81,7 @@ class SurveyBuilder.Models.OptionModel extends Backbone.RelationalModel
 
   preload_sub_questions: =>
     return unless @has_sub_questions()
-    elements = _(this.get('elements')).sortBy('order_number')
-    _.each elements, (element, counter) =>
+    _.each this.get('elements'), (element, counter) =>
 
       question_model = SurveyBuilder.Views.QuestionFactory.model_for(element)
 
@@ -92,7 +91,7 @@ class SurveyBuilder.Models.OptionModel extends Backbone.RelationalModel
       @set_question_number_for_sub_question(question_model)
 
     this.trigger('change:preload_sub_questions', @sub_question_models)
-    @sub_question_order_counter = _(elements).last().order_number
+    @sub_question_order_counter = _(this.get('elements')).last().order_number
 
 SurveyBuilder.Models.OptionModel.setup()
 

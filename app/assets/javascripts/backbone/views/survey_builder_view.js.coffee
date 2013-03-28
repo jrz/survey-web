@@ -21,19 +21,7 @@ class SurveyBuilder.Views.SurveyBuilderView extends Backbone.View
 
     # $( "#sidebar" ).tabs()
 
-    _.defer(=>
-      this.survey.fetch({
-        success: (data) =>
-          this.dummy_pane.render()
-          $.getJSON("/api/surveys/#{survey_id}", this.preload_elements)
-      })
-
-      $(this.el).bind('ajaxStop.preload', =>
-        window.loading_overlay.hide_overlay()
-        $(this.el).unbind('ajaxStop.preload')
-        this.dummy_pane.sort_question_views_by_order_number()
-        this.dummy_pane.reorder_questions())
-    )
+    $.getJSON("/api/surveys/#{survey_id}", this.preload_elements)
 
 
   new_question: (event, data) =>
@@ -59,6 +47,8 @@ class SurveyBuilder.Views.SurveyBuilderView extends Backbone.View
       model.preload_elements()
       this.dummy_pane.add_question(element.type, model)
       this.settings_pane.add_question(element.type, model)
+    window.loading_overlay.hide_overlay()
+    this.dummy_pane.reorder_questions()
 
   loading_overlay: =>
     window.loading_overlay.show_overlay()

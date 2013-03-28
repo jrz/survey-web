@@ -83,7 +83,6 @@ class SurveyBuilder.Models.CategoryModel extends Backbone.RelationalModel
 
       question_model.preload_elements()
       @sub_question_models.push question_model
-      console.log @sub_question_models
       question_model.on('destroy', this.delete_sub_question, this)
       @set_question_number_for_sub_question(question_model)
 
