@@ -11,6 +11,7 @@ class SurveyBuilder.Views.Dummies.OptionView extends Backbone.View
     this.model.on('add:sub_question', this.add_sub_question)
     this.model.on('change:preload_sub_questions', this.preload_sub_questions)
     this.model.on('destroy', this.remove, this)
+    @preload_sub_questions()
 
   render: =>
     data = _.extend(this.model.toJSON(), {errors: this.model.errors})
@@ -25,8 +26,8 @@ class SurveyBuilder.Views.Dummies.OptionView extends Backbone.View
     this.trigger('render_added_sub_question')
     this.render()
 
-  preload_sub_questions: (sub_question_models) =>
-    _.each(sub_question_models, (sub_question_model) =>
+  preload_sub_questions: () =>
+    _.each(@model.sub_question_models, (sub_question_model) =>
       this.add_sub_question(sub_question_model)
     )
     this.trigger('render_preloaded_sub_questions')

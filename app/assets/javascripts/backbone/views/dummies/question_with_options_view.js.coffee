@@ -11,6 +11,7 @@ class SurveyBuilder.Views.Dummies.QuestionWithOptionsView extends SurveyBuilder.
     @model.get('options').on('destroy', @delete_option_view, this)
     @model.on('add:options', @add_new_option, this)
     @model.on('reset:options', @preload_options, this)
+    @preload_options()
 
   render: =>
     super
@@ -41,8 +42,9 @@ class SurveyBuilder.Views.Dummies.QuestionWithOptionsView extends SurveyBuilder.
 
     return this
 
-  preload_options: (collection) =>
-    collection.each( (model) =>
+  preload_options: () =>
+    @render()
+    @model.get('options').each( (model) =>
       @add_new_option(model)
     )
 

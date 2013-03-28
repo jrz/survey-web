@@ -6,9 +6,9 @@ class SurveyBuilder.Models.SurveyModel extends Backbone.RelationalModel
     @urlRoot = "/api/surveys"
     @set('id', survey_id)
 
-  add_new_question_model:(type) =>
+  add_new_question_model:(data) =>
     # TODO: Why should a view create models?
-    question_model = SurveyBuilder.Views.QuestionFactory.model_for({ type: type, survey_id : @survey_id })
+    question_model = SurveyBuilder.Views.QuestionFactory.model_for(data)
     @set_order_number_for_question(question_model)
     @question_models.push question_model
     @set_question_number_for_question(question_model)

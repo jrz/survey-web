@@ -14,6 +14,7 @@ class SurveyBuilder.Views.Dummies.CategoryView extends SurveyBuilder.Views.Dummi
     @model.on('change:preload_sub_questions', @preload_sub_questions)
     @model.on('add:sub_question', @add_sub_question)
     @on('destroy:sub_question', @reorder_questions, this)
+    @preload_sub_questions()
 
   render: =>
     data = @model.toJSON().category
@@ -60,8 +61,9 @@ class SurveyBuilder.Views.Dummies.CategoryView extends SurveyBuilder.Views.Dummi
     @uncollapse()
     @render()
 
-  preload_sub_questions: (sub_question_models) =>
-    _.each(sub_question_models, (sub_question_model) =>
+  preload_sub_questions: () =>
+    @render()
+    _.each(@model.sub_question_models, (sub_question_model) =>
       @add_sub_question(sub_question_model)
     )
 

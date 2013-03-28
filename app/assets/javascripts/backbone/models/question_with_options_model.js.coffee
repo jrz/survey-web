@@ -48,6 +48,12 @@ class SurveyBuilder.Models.QuestionWithOptionsModel extends SurveyBuilder.Models
         model.preload_sub_questions()
     @seeded = true
 
+  preload_elements: =>
+    console.log(this.get('options'))
+    @get('options').each (model) =>
+      model.preload_sub_questions()
+    @seeded = true
+
   success_callback: (model, response) =>
     @seed()
     super

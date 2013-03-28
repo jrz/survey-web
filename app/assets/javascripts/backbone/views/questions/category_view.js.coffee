@@ -15,6 +15,7 @@ class SurveyBuilder.Views.Questions.CategoryView extends Backbone.View
     this.model.on('change', this.render, this)
     this.model.on('change:id', this.render, this)
     this.model.on('change:preload_sub_questions', this.preload_sub_questions)
+    @preload_sub_questions()
 
   render:(template) =>
     data = this.model.toJSON().category
@@ -62,10 +63,11 @@ class SurveyBuilder.Views.Questions.CategoryView extends Backbone.View
     $('#settings_pane').append($(question.render().el))
     $(question.render().el).hide()
 
-  preload_sub_questions: (collection) =>
-    _.each(collection, (question) =>
-      this.add_sub_question(question)
+  preload_sub_questions: () =>
+    _.each(@model.sub_question_models, (sub_question_model) =>
+      this.add_sub_question(sub_question_model)
     )
+    @render()
 
   delete_sub_question: (sub_question_model) =>
     view = sub_question_model.actual_view
