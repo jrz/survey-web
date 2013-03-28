@@ -6,8 +6,8 @@ module Api
       before_filter :only_finalized_and_unexpired_surveys, :only => [:index, :questions_count]
 
       def index
-          @surveys ||= Survey.accessible_by(current_ability)
-        if stale? @surveys
+        @surveys ||= Survey.accessible_by(current_ability)
+        stale? @surveys, :etag => @surveys.cache_key do
           render :json => @surveys
         end
       end
@@ -29,7 +29,7 @@ module Api
 
       def show
         survey = Survey.find_by_id(params[:id])
-        if stale? survey
+        stale? survey, :etag => survey.cache_key, :last_modified => survey.updated_at do
           authorize! :read, survey
           if survey
             survey_json = survey.as_json

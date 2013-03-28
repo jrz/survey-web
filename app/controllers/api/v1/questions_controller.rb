@@ -47,7 +47,7 @@ module Api
 
       def index
         survey = Survey.find_by_id(params[:survey_id])
-        if stale? survey
+        stale? survey, :etag => survey.cache_key do
           authorize! :read, survey
           methods = [:type, :image_url]
           methods << :image_in_base64 if request.referrer.nil?
@@ -61,7 +61,7 @@ module Api
 
       def show
         question = Question.find_by_id(params[:id])
-        if stale? question
+        stale? question, :etag => question.cache_key, :last_modified => question.updated_at do
           authorize! :read, question.try(:survey)
           methods = [:type, :image_url, :has_multi_record_ancestor]
           methods << :image_in_base64 if request.referrer.nil?

@@ -37,7 +37,7 @@ module Api
 
       def index
         survey = Survey.find_by_id(params[:survey_id])
-        if stale? survey
+        stale? survey, :etag => survey.cache_key do
           authorize! :read, survey
           if survey
             render :json => survey.first_level_categories
@@ -49,7 +49,7 @@ module Api
 
       def show
         category = Category.find_by_id(params[:id])
-        if stale? category
+        stale? category, :etag => category.cache_key, :last_modified => category.updated_at do
           authorize! :read, category.try(:survey)
           if category
             render :json => category.to_json_with_sub_elements

@@ -36,7 +36,7 @@ module Api
 
       def index
         question = Question.find_by_id(params[:question_id])
-        if stale? question
+        stale? question, :etag => question.cache_key do
           authorize! :read, question.try(:survey)
           if question.is_a? QuestionWithOptions
             render :json => question.options.as_json(:include => { :categories => { :methods => :type }})
