@@ -37,21 +37,25 @@ module Api
 
       def index
         survey = Survey.find_by_id(params[:survey_id])
-        authorize! :read, survey
-        if survey
-          render :json => survey.first_level_categories
-        else
-          render :nothing => true, :status => :bad_request
+        if stale? survey
+          authorize! :read, survey
+          if survey
+            render :json => survey.first_level_categories
+          else
+            render :nothing => true, :status => :bad_request
+          end
         end
       end
 
       def show
         category = Category.find_by_id(params[:id])
-        authorize! :read, category.try(:survey)
-        if category
-          render :json => category.to_json_with_sub_elements
-        else
-          render :nothing => true, :status => :bad_request
+        if stale? category
+          authorize! :read, category.try(:survey)
+          if category
+            render :json => category.to_json_with_sub_elements
+          else
+            render :nothing => true, :status => :bad_request
+          end
         end
       end
 

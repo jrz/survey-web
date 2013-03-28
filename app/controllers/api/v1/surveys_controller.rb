@@ -6,15 +6,17 @@ module Api
       before_filter :only_finalized_and_unexpired_surveys, :only => [:index, :questions_count]
 
       def index
-        @surveys ||= Survey.accessible_by(current_ability)
-        render :json => @surveys
+          @surveys ||= Survey.accessible_by(current_ability)
+        if stale? @surveys
+          render :json => @surveys
+        end
       end
 
       def questions_count
         @surveys ||= Survey.accessible_by(current_ability)
         render :json => { count: @surveys.with_questions.count }
       end
-      
+
       def identifier_questions
         survey = Survey.find_by_id(params[:id])
         authorize! :read, survey
@@ -27,13 +29,15 @@ module Api
 
       def show
         survey = Survey.find_by_id(params[:id])
-        authorize! :read, survey
-        if survey
-          survey_json = survey.as_json
-          survey_json['elements'] = survey.elements_in_order_as_json
-          render :json => survey_json
-        else
-          render :nothing => true, :status => :bad_request
+        if stale? survey
+          authorize! :read, survey
+          if survey
+            survey_json = survey.as_json
+            survey_json['elements'] = survey.elements_in_order_as_json
+            render :json => survey_json
+          else
+            render :nothing => true, :status => :bad_request
+          end
         end
       end
 
@@ -57,7 +61,7 @@ module Api
             and(survey[:finalized].eq(true)).     # Finalized
             and(survey[:archived].eq(false))
           ).
-          or(survey[:id].in(extra_surveys))
+            or(survey[:id].in(extra_surveys))
         )
       end
 
