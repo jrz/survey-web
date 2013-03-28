@@ -1,7 +1,7 @@
 module Api
   module V1
     class SurveysController < APIApplicationController
-      caches_action [:show, :identifier_questions], :if => :survey_finalized?
+      caches_action :show, :if => :survey_finalized?
       authorize_resource :except => [:identifier_questions, :questions_count]
       before_filter :only_finalized_and_unexpired_surveys, :only => [:index, :questions_count]
 

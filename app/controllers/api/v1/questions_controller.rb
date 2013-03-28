@@ -1,13 +1,11 @@
 module Api
   module V1
     class QuestionsController < APIApplicationController
-      caches_action [:show, :index]
       before_filter :dont_cache
 
       def create
         question = Question.new_question_by_type(params[:question][:type], params[:question])
         authorize! :update, question.try(:survey)
-        expire_action :action => [:show, :index]
         if question.save
           render :json => question.to_json(:methods => [:type, :has_multi_record_ancestor])
         else
@@ -18,7 +16,6 @@ module Api
       def update
         question = Question.find(params[:id])
         authorize! :update, question.try(:survey)
-        expire_action :action => [:show, :index]
         if question.update_attributes(params[:question])
           render :json => question.to_json(:methods => :type)
         else
@@ -29,7 +26,6 @@ module Api
       def destroy
         question = Question.find_by_id(params[:id])
         authorize! :update, question.try(:survey)
-        expire_action :action => [:show, :index]
         begin
           Question.destroy(params[:id])
           render :nothing => true
@@ -42,7 +38,6 @@ module Api
         question = Question.find(params[:id])
         authorize! :update, question.try(:survey)
         question.update_attributes({ :image => params[:image] })
-        expire_action :action => [:show, :index]
         if question.save
           render :json => { :image_url => question.image_url }
         else
@@ -77,7 +72,6 @@ module Api
       def duplicate
         question = Question.find_by_id(params[:id])
         authorize! :edit, question.try(:survey)
-        expire_action :action => [:show, :index]
         if question && question.copy_with_order
           flash[:notice] = t("flash.question_duplicated")
         else

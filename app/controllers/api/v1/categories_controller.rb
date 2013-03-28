@@ -3,12 +3,10 @@ module Api
   module V1
     class CategoriesController < APIApplicationController
       before_filter :dont_cache
-      caches_action [:show, :index]
 
       def create
         category = Category.new_category_by_type(params[:category][:type], params[:category])
         authorize! :update, category.try(:survey)
-        expire_action :action => [:show, :index]
         if category.save
           render :json => category.to_json
         else
@@ -19,7 +17,6 @@ module Api
       def update
         category = Category.find_by_id(params[:id])
         authorize! :update, category.try(:survey)
-        expire_action :action => [:show, :index]
         if category && category.update_attributes(params[:category])
           render :json => category.to_json
         else
@@ -30,7 +27,6 @@ module Api
       def destroy
         category = Category.find_by_id(params[:id])
         authorize! :update, category.try(:survey)
-        expire_action :action => [:show, :index]
         if category
           Category.destroy(params[:id])
           render :nothing => true
@@ -62,7 +58,6 @@ module Api
       def duplicate
         category = Category.find_by_id(params[:id])
         authorize! :update, category.try(:survey)
-        expire_action :action => [:show, :index]
         if category && category.copy_with_order
           notice = category.type == "MultiRecordCategory" ? t("flash.mr_duplicated") : t("flash.category_duplicated")
           flash[:notice] = notice
